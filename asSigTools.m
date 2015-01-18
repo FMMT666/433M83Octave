@@ -2,6 +2,9 @@
 %  asSigTools for Octave
 % =======================
 %
+%   https://github.com/FMMT666/433M83Octave
+%   FMMT666(ASkr)
+%
 %
 % CHANGES V02:
 %  - swapped row 2 and 3 of listPeaks
@@ -12,11 +15,11 @@
 %  - asPlot() now accepts a cell of signals as argument
 %
 % CHANGES V04:
-%  - 
+%  - forgot
 %
 %
 % TODO:
-%  - documentation (in/out of functions below)
+%  - Doxygen documentation (in/out of functions below)
 %  - check if signal split function can use an additional length
 %  -
 %
@@ -51,7 +54,6 @@
 %
 %   asTest( fileName )
 % 
-%
 %
 
 
