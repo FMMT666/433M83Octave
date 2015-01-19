@@ -168,7 +168,7 @@ endfunction
 
 %*****************************************************************************
 %*** asSignalSplit( signal, splitList )
-%*** Extracts a part of signal.
+%*** Extracts a part of a longer signal.
 %*** sampleStartEnd is an ( n , 2 ) array
 %*** (n,1) sampleStart, (n,2) sampleEnd
 %*** WARNING: This returns a cell array!
@@ -197,6 +197,7 @@ endfunction
 %*****************************************************************************
 %*** asLinePoly( signal, [color], [linewidth] )
 %*** asLinePoly( xs, ys, [color], [linewidth] )
+%*** Draws polylines in the current plot (time-value pairs).
 %*****************************************************************************
 function asLinePoly( varargin )
 
@@ -230,6 +231,7 @@ endfunction
 
 %*****************************************************************************
 %*** asLineHoriz( signal, level )
+%*** ...
 %*****************************************************************************
 function asLineHoriz( signal, level, varargin )
 
@@ -347,7 +349,7 @@ endfunction
 
 %*****************************************************************************
 %*** asSignalShiftUnder
-%*** Creates a new waveform of "data1" that plots under "data2"
+%*** Creates a new waveform of "data1" that plots under "data2".
 %*****************************************************************************
 function [ offset, data ] = asSignalShiftUnder( data1, data2 )
   offset = max( data1(2,:) ) - min( data2(2,:) );
@@ -360,6 +362,7 @@ endfunction
 
 %*****************************************************************************
 %*** asFindBitTime
+%*** ...
 %*****************************************************************************
 function [ bitTime, bitDev, minTimeMatches ] = asFindBitTime ( listDeltas, tol, varargin )
   
@@ -388,6 +391,7 @@ endfunction
 
 %*****************************************************************************
 %*** asListDeltas
+%*** ...
 %*****************************************************************************
 function listDeltas = asListDeltas ( listPeaks )
   for i = 1:size( listPeaks, 2 ) - 1
@@ -456,6 +460,7 @@ endfunction
 
 %*****************************************************************************
 %*** asLoadWav
+%*** ...
 %*****************************************************************************
 function [ signal, sampleRate ] = asLoadWav( fileName )
   
@@ -482,6 +487,7 @@ endfunction
 
 %*****************************************************************************
 %*** asFilterLowPass
+%*** Applies a low pass filter to the signal.
 %*****************************************************************************
 function sigFilt = asFilterLowPass( sigDat, lpFreq, lpOrder )
   
@@ -564,3 +570,16 @@ function tPL = asListPeaks( samples, trigger  )
 endfunction
 
 
+
+%*****************************************************************************
+%*** asDocTest
+%*****************************************************************************
+% usage: c = asDocTest ( a, b )
+%
+% This function does nothing...
+function c = asDocTest( a, b )
+
+
+  c = a * b;
+
+endfunction

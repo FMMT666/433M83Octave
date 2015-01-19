@@ -44,6 +44,7 @@ It can
   - store as time-value format
   - apply filters
   - calculate offsets and moving thresholds
+  - find peaks
   - estimate bitrates
   - extract packets from long recordings
   - split waveforms
