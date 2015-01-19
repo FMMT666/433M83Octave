@@ -56,8 +56,8 @@ It can
 
 In addition to an installation of GNU Octave, the following Octave packages are required:
 
-  todo...
-
+  - octave-signal
+  - ...
 
 
 ## Usage
@@ -70,6 +70,7 @@ In addition to an installation of GNU Octave, the following Octave packages are 
   Fire up a quick example by typing *asTest("signals/433M83_02.wav")*
 
   todo...
+
 
 ## Examples
 

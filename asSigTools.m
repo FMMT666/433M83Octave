@@ -126,7 +126,7 @@ endfunction
 
 
 %*****************************************************************************
-%*** asSignalUnify( signal, splitList )
+%*** asSignalUnify( signalCell )
 %*** Fed with a cell array of signals, all of them will be extended to the
 %*** size of the largest one.
 %*****************************************************************************
