@@ -106,11 +106,55 @@
              
 #### asLineHoriz()
 
+  Draws a horizontal line on a plotted signal.
+
     asLineHoriz( signal, level, [color], [linewidth] )
+    
+    PARAMS: signal    - the signal to draw the line on (reference for length and position)
+            level     - the level at which the line should be drawn
+            color     - any Octave plot color, e.g. 'red', 'blue', ...
+            linewidth - width of the line (default is 2)
+    RETURN: -
 
-#### asLinePoly( signal, [color], [linewidth] )
-#### asLinePoly( xs, ys, [color], [linewidth] )
+  Notice that the 'color' and 'linewidth' parameters are positional. If you need to specify
+  the width of the line, you can not skip the 'color' parameter (yet).
+    
+    EXAMPLES:
+            asLineHoriz( sig1, 0.4 );
+            asLineHoriz( sig2, -2.1, 'red', 5 );
 
+
+#### asLinePoly()
+
+  Draws a polyline on the plot.  
+
+    asLinePoly( signal, [color], [linewidth] )
+    asLinePoly( xs, ys, [color], [linewidth] )
+    
+    PARAMS: signal    - a signal containing time-value pairs
+            xs, ys    - two arrays with xs as time and ys as value data.
+            color     - any Octave plot color, e.g. 'red', 'blue', ...
+            linewidth - width of the line (default is 2)
+    
+    RETURN: -
+
+  At a glance, this function equals asPlot(), but it allows
+  
+  - adding signals to an existing plot or
+  - drawing signals of different lengths over each other.
+
+  Keep in mind that xs and ys need to have the same dimensions.
+  
+  Also notice that the 'color' and 'linewidth' parameters are positional. If you need to specify
+  the width of the line, you can not skip the 'color' parameter (yet).
+
+    EXAMPLES:
+            asLinePoly( sig1 );
+            
+            a = [ 0, 10, 20, 30 ];
+            b = [ 1,  5, -3,  4 ];
+            asLinePoly( a, b, 'red' );
+    
 ---
 ### Math
 
