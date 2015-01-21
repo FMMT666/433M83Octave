@@ -40,17 +40,17 @@
 ---
 ### Loading
 
- All signals in 433M83Octave are time-value arrays with the size of
+  All signals in 433M83Octave are time-value arrays with the size of
  
-   size( signal ) = 2, n
+    size( signal ) = ( 2, n )
    
- where 'n' is the number of samples the loaded signal.  
+  where 'n' is the number of samples the loaded signal.  
  
-   signal( 1, : ) contains the time in seconds
-   signal( 2, : ) contains the real value of the sample
+    signal( 1, : ) contains the time in seconds
+    signal( 2, : ) contains the real value of the sample
 
- Loading of stereo files or complex signals, e.g. IQ is and will not be supported.  
- This is all about decoding "simple" [...], time-domain protocols (for now).
+  Loading of stereo files or complex signals, e.g. IQ is and will not be supported.  
+  This is all about decoding "simple" [...], time-domain protocols (for now).
   
 
 #### asLoadWav()
