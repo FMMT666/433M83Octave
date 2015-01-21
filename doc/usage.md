@@ -158,8 +158,44 @@
 ---
 ### Math
 
-#### asFilterLowPass( signal, frequency, order )
-#### asListPeaks( signal, triggerLevel  )
+#### asFilterLowPass()
+
+  Applies a [Butterworth][1] low pass filter to a signal.  
+  
+
+    sigFilt = asFilterLowPass( signal, frequency, order )
+    
+    PARAMS: signal    - signal to which the filter should be applied
+            frequency - corner frequency
+            order     - filter order
+    RETURN: sigFilt   - the filtered signal
+    
+  The original signal will not be changed.
+    
+    EXAMPLES:
+            sigFilt1 = asFilterLowPass( sigOrg, 50, 2 );
+
+
+#### asListPeaks()
+
+  Creates and returns a list of peaks found in a signal.
+  
+    listPeaks = asListPeaks( signal, triggerLevel  )
+
+    PARAMS: signal       - the signal which should be analysed
+            triggerLevel - the threshold level above which peak should be recognized
+    RETURN: an array of size (4, n) with [ time, length, peakval, peaktime ] pairs.
+            time     - the time at which the threshold was exceeded
+            length   - time spent above the threshold level
+            peakval  - value of the topmost sample
+            peaktime - time at which the point of the topmost sample was acquired
+
+  ...
+   
+    EXAMPLES:
+            listPeaks = asListPeaks( sigFilt, 0.2 );
+
+    
 #### asListDeltas( peakList )
 #### asListPackets( deltaList, timeNoPeak )
 #### asFindBitTime( deltaList, tolerancePercent, [ownBitLength] )
@@ -184,3 +220,5 @@
 
 
 
+---
+[1]: http://en.wikipedia.org/wiki/Butterworth_filter
