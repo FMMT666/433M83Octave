@@ -178,22 +178,45 @@
 
 #### asListPeaks()
 
-  Creates and returns a list of peaks found in a signal.
+  Creates and returns a list of peaks found in a signal.  
+  Not a perfect solution for now, but still helpful for finding pulses or determining bit lengths.
   
-    listPeaks = asListPeaks( signal, triggerLevel  )
+  For now, asListPeaks() uses a simple, static threshold level (without hysterisis) and
+  no fancy dynamically adpated trigger levels (TODO).
+  
+    listPeaks = asListPeaks( signal, triggerLevel )
 
     PARAMS: signal       - the signal which should be analysed
             triggerLevel - the threshold level above which peak should be recognized
-    RETURN: an array of size (4, n) with [ time, length, peakval, peaktime ] pairs.
+    RETURN: an array of size (4, n) with [ time, peakval, length, peaktime ] pairs.
             time     - the time at which the threshold was exceeded
-            length   - time spent above the threshold level
             peakval  - value of the topmost sample
+            length   - time spent above the threshold level
             peaktime - time at which the point of the topmost sample was acquired
 
-  ...
+  The 1st index, "time", specifies the time at which the threshold level "triggerLevel" was exceeded.
+  Usually (tm) true for the start of a bit or the beginning of a pulse, whereas the 4th index,
+  "peaktime" determines the time at which the highest value occured.
    
     EXAMPLES:
             listPeaks = asListPeaks( sigFilt, 0.2 );
+            
+  To plot this list of peaks over a plot of "sigFilt":
+  
+    asPlot( sigFilt, 'linewidth', 2 );
+    
+    asLinePoly( listPeaks( 1:2, : ) );
+    % or
+    asLinePoly( listPeaks(1,:), listPeaks(2,:) );
+
+  For an overview of (possible) bit length, try something like
+  
+    [ num, time ] = hist( listPeaks(3,:), bins );
+    
+  and experiment with the "bins" value. A good start is usually around the length of the
+  "listPeaks" array, down to 1/10 of the length.
+  
+  Repetive bits of the same length form several peaks at n*bittime.
 
     
 #### asListDeltas( peakList )
