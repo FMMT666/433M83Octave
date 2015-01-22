@@ -15,13 +15,14 @@
 %  - asPlot() now accepts a cell of signals as argument
 %
 % CHANGES V04:
-%  - forgot
+%  - I obviously managed to delete most of the code I wrote during the
+%    last 6..7 months :-/
 %
 %
 % TODO:
 %  - Doxygen documentation (in/out of functions below)
 %  - check if signal split function can use an additional length
-%  -
+%  - rewrite all the missing stuff AGAIN *raaage*
 %
 %
 % PLOTTING 
