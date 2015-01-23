@@ -219,8 +219,72 @@
   Repetive bits of the same length form several peaks at n*bittime.
 
     
-#### asListDeltas( peakList )
-#### asListPackets( deltaList, timeNoPeak )
+#### asListDeltas()
+
+  Creates a list of time differences from a list of peaks.  
+  Useful for protocols, where the data is coded in terms of time.
+
+    listDeltas = asListDeltas( peakList )
+    
+    PARAMS: peakList   - a list of peaks, e.g. as created by asListPeaks()
+    
+    RETURN: listDeltas - a two dimensional [ time, dtime ] array
+                         time(n)  = tpeak(n)
+                         dtime(n) = tpeak(n+1) - tpeak(n)
+
+  Remembering that peakList is a (4,n) array with [ time, peakval, length, peaktime ],    
+  asListDeltas() uses peakList's "time" (1,:) index to calculate the time differences.
+    
+    EXAMPLES:
+            todo...
+    
+    
+#### asListPacket()
+
+  Fed with a deltaList and the timeout value "timeNoPeak", this function can be used to
+  extract active area timings (presumably data packets) from a signal.  
+  
+  This will only work if
+  
+  - the peak to peak noise between the packets is lower than a [...] threshold level and
+  - the active area is always busy and does not "time out" or show no activity for a
+    period longer than timeNoPeak.
+
+  [...]
+
+      +--+ +-+ +--+ +-+              +--+ +-+ +--+ +-+              +-+  
+      |  | | | |  | | |              |  | | | |  | | |              | |  
+    --+  +-+ +-+  +-+ +--------------+  +-+ +-+  +-+ +--------------+ +  
+      |< active area >|< timeNoPeak >|< active area >|< timeNoPeak >|
+
+
+  This is useful for decoding time coded protocols (though it might even be used to decode
+  ASK modulations) or gaining more information about occurrences of pulses.
+  
+  
+    [ actList, deltaListShort ] = asListPackets( deltaList, timeNoPeak )
+
+    PARAMS: deltaList  - a list of deltaPeaks, e.g. created by asListDeltas
+            timeNoPeak - time of no activity in seconds
+            
+    RETURN: actList        - two dimensional (2,n) list with [ starttime, endtime ] of the active areas
+            deltaListShort - same as deltaList, except that times > timeNoPeak are removed
+    
+    EXAMPLES:
+            lp = asListPackets( deltaList, 1.0 );
+
+            lp =
+              1.4045    2.3376
+              4.9190    5.8541
+              8.0133    8.9466
+             11.8366   12.7883
+             15.1104   16.0618
+             ...
+
+            [ lp, dl ] = asListPackets( deltaList, 0.7 );
+            
+    
+    
 #### asFindBitTime( deltaList, tolerancePercent, [ownBitLength] )
 #### asFindSamplesByTime( signal, sTim, [varargin] )
 #### asSignalSplit( signal, sampleStartEnd )
