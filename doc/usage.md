@@ -283,9 +283,42 @@
 
             [ lp, dl ] = asListPackets( deltaList, 0.7 );
             
+   
     
+#### asFindBitTime()
+
+  Tries to determine the bit time in a list of delta times.  
+  Should be handle with care because the "algorithm" is not very clever yet...
+
+    [ bitTime, bitDev, minTimeMatches ] = asFindBitTime ( listDeltas, tol, [ownBitTime] )
+
+    PARAMS: listDeltas     - a list of delta times, e.g. from asListDeltas()
+            tol            - a tolerance ranging from 0 to 1, equaling 0 to 100%
+            ownBitTime     - overrides the min( listDeltas ) calculation (see below)
+            
+    RETURN: bitTime        - the calculated bit time
+            bitDev         - the standard deviation of all discovered bits
+            minTimeMatches - number of matches found for bittime +- the tolerance given
     
-#### asFindBitTime( deltaList, tolerancePercent, [ownBitLength] )
+  As for now, this function looks for the shortest time in listDeltas via
+  
+    minBT = min( listDeltas(2,:) )
+    
+  and then searches for every time difference, that matches the bit time +- the given tolerance and
+  returns the mean values of all occurrences.  
+  Because the automatically extracted minBT is already the shortest time, only the +tolerance counts
+  here.
+  
+  The automatic "algorithm" [hahaha] fails, if only a single time, shorter than the bit time is found
+  in the delta list. In this case, one might override the min() extraction by specifying "ownBitTime"
+  as a third argument in the call to asFindBitTime().
+    
+    EXAMPLES:
+            bTime = asFindBitTime( listDeltas, 0.3 );
+            ...
+        
+
+
 #### asFindSamplesByTime( signal, sTim, [varargin] )
 #### asSignalSplit( signal, sampleStartEnd )
 #### asSignalUnify( sigCell )
