@@ -13,6 +13,11 @@
 
 ### Signal
 
+  A two dimensional array of size (2,n), containing a sampled waveform.
+  
+    (1,:) - time
+    (2,:) - value
+    
   todo...
 
 ### Signal Cells
@@ -21,10 +26,23 @@
 
 ### peakLists
 
+  A four dimensional array of size (4,n).
+
+    (1,:) - time
+    (2,:) - peakval
+    (3,:) - length
+    (4,:) - peaktime
+
   todo...
 
 ### deltaLists
 
+  A two dimensional array of size (2,n), containing absolute time stamps of "occurences" [time] and
+  time differences to another "occurence".
+  
+    (1,:) - time
+    (2,:) - time differences
+    
   todo...
 
 ### bitLists
@@ -316,10 +334,28 @@
     EXAMPLES:
             bTime = asFindBitTime( listDeltas, 0.3 );
             ...
-        
 
 
-#### asFindSamplesByTime( signal, sTim, [varargin] )
+#### asFindSamplesByTime()
+
+  Finds the index of a sample by time.  
+  For a given sample time ts, a signal only contains discrete time-value samples at n*ts.
+  This functions searches the nearest, lowest sample position that matches the given time sTim.
+
+    sNum = asFindSamplesByTime( signal, sTim, [bitRate] )
+
+    PARAMS: signal  - a signal or a list of signals in which the sample should be found
+            sTim    - time of the sample position to find
+            bitRate - if given, a direct calculation is returned, regardless of the signals's
+                      length or existance
+    RETURN: sNum    - number (index) of the sample which corresponds to the time sTim.
+                      0 if nothing could be found.
+    
+    EXAMPLES:
+            sNum = asFindSamplesByTime( sig1, 0.45 )
+            sInd = asFindSamplesByTime( sig2, 1.0, 44100 )
+
+    
 #### asSignalSplit( signal, sampleStartEnd )
 #### asSignalUnify( sigCell )
 #### asSignalShiftUnder( signal1, signal2 )
