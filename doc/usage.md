@@ -270,10 +270,10 @@
 
   [...]
 
-      +--+ +-+ +--+ +-+              +--+ +-+ +--+ +-+              +-+  
-      |  | | | |  | | |              |  | | | |  | | |              | |  
-    --+  +-+ +-+  +-+ +--------------+  +-+ +-+  +-+ +--------------+ +  
-      |< active area >|< timeNoPeak >|< active area >|< timeNoPeak >|
+       +--+ +-+ +--+ +-+              +--+ +-+ +--+ +-+              +-+  
+       |  | | | |  | | |              |  | | | |  | | |              | |  
+     --+  +-+ +-+  +-+ +--------------+  +-+ +-+  +-+ +--------------+ +  
+       |< active area >|< timeNoPeak >|< active area >|< timeNoPeak >|
 
 
   This is useful for decoding time coded protocols (though it might even be used to decode
