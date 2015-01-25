@@ -20,9 +20,9 @@
 %
 %
 % TODO:
-%  - Doxygen documentation (in/out of functions below)
 %  - check if signal split function can use an additional length
 %  - rewrite all the missing stuff AGAIN *raaage*
+%  - function to return a length in seconds
 %
 %
 % PLOTTING 
@@ -98,7 +98,7 @@ function asTest( wavName )
   asLinePoly( plotDS );
   
   % create indices of the packet start and end samples from the time list
-  listPackSams = asFindSamplesByTime( sigFilt, listPack, 44100 );
+  listPackSams = asFindSamplesByTime( sigFilt, listPack, 0 );
 
 endfunction
 
@@ -180,8 +180,14 @@ function sigCell = asSignalSplit( signal, splitList )
 
   for i = 1 : size( splitList, 1 )
   
-    sampleStart = splitList(i,1);
-    sampleEnd   = splitList(i,2);
+%    sampleStart = splitList(i,1);
+%    sampleEnd   = splitList(i,2);
+
+    sampleStart = asFindSamplesByTime( signal, splitList(i,1), 0 );
+    sampleEnd   = asFindSamplesByTime( signal, splitList(i,2), 0 );
+
+    disp(sampleStart)
+    disp(sampleEnd)
     
     if sampleStart > 0 && sampleStart < sampleEnd && sampleEnd <= size(signal(1,:),2)
       sigCell{i} = signal(:, sampleStart:sampleEnd );
@@ -260,9 +266,11 @@ endfunction
 %*** Returns the number of the sample that matches the time given by <sTim>.
 %*** If there's no direct match, the last sample with t < sTim is returned.
 %*** If nothing usefule was found, this function returns 0.
-%*** If bitRate is given, nothing is looked up but directly calculated.
+%*** If bitRate > 0 is given, nothing is looked up but directly calculated.
 %*** This also allows sTim being a complete packet list from
-%*** asListPackets()
+%*** asListPackets().
+%*** If bitRate == 0 given, the sample rate is calculates by the time 
+%*** difference of the first two samples.
 %*****************************************************************************
 function sNum = asFindSamplesByTime( signal, sTim, varargin )
 
@@ -276,12 +284,17 @@ function sNum = asFindSamplesByTime( signal, sTim, varargin )
       if sNum > size( signal(1,:), 2 )
         sNum = 0;
       end
+    else
+      if length(signal) < 2
+        sNum = 0;
+      else
+        sNum = 1 + sTim * 1 / ( signal(1,2)-signal(1,1) );
+      end
     end
-  
   else
     % SEARCH FOR TIME
     for i = 1 : size( signal(1,:), 2 )
-    
+      
       val = signal(1,i);
       if val == sTim
         sNum = i;
@@ -292,7 +305,6 @@ function sNum = asFindSamplesByTime( signal, sTim, varargin )
       end
     end
   end
-
   sNum = uint64( sNum );
   
 endfunction
@@ -571,16 +583,3 @@ function tPL = asListPeaks( samples, trigger  )
 endfunction
 
 
-
-%*****************************************************************************
-%*** asDocTest
-%*****************************************************************************
-% usage: c = asDocTest ( a, b )
-%
-% This function does nothing...
-function c = asDocTest( a, b )
-
-
-  c = a * b;
-
-endfunction

@@ -257,7 +257,7 @@
             todo...
     
     
-#### asListPacket()
+#### asListPackets()
 
   Fed with a deltaList and the timeout value "timeNoPeak", this function can be used to
   extract active area timings (presumably data packets) from a signal.  
@@ -338,7 +338,7 @@
 
 #### asFindSamplesByTime()
 
-  Finds the index of a sample by time.  
+  Finds indices of samples by time.  
   For a given sample time ts, a signal only contains discrete time-value samples at n*ts.
   This functions searches the nearest, lowest sample position that matches the given time sTim.
 
@@ -346,17 +346,50 @@
 
     PARAMS: signal  - a signal or a list of signals in which the sample should be found
             sTim    - time of the sample position to find
-            bitRate - if given, a direct calculation is returned, regardless of the signals's
-                      length or existance
+                      can be a single time or an array of times, regardless of its dimension.
+            bitRate - If given and > 0, a direct calculation is returned, regardless of the signals's
+                      length or existance: sample = sTim*bitRate.
+                      If given, but 0, the first two samples of the signals will be used to
+                      calculate the bitRate and then return: sample = sTim* 1/(2ndSamp-1stSamp)
     RETURN: sNum    - number (index) of the sample which corresponds to the time sTim.
                       0 if nothing could be found.
+
+  WARNING:  
+  Using this without specifying the bitRate, either the real value, e.g. 44100 or 0, will take
+  a very long time (yet)!
     
     EXAMPLES:
-            sNum = asFindSamplesByTime( sig1, 0.45 )
-            sInd = asFindSamplesByTime( sig2, 1.0, 44100 )
+            sNum = asFindSamplesByTime( sig1, 0.45 )       % poor performance
+            sNum = asFindSamplesByTime( sig2, 1.0, 0 )     % quick with auto bitrate calc
+            sNum = asFindSamplesByTime( sig2, 1.0, 44100 ) % quick with given bitrate
+            sNum = asFindSamplesByTime( sig, [1,2,3], 0 ); % multiple values are possible
 
     
-#### asSignalSplit( signal, sampleStartEnd )
+#### asSignalSplit()
+
+  Splits a signal with several packets into multiple, smaller signals, containing only the
+  areas of interest.  
+  All split signals are returned in a cell of size {1,n}, where n is the number of signals
+  specified via splitList. The splitList can be obtained with asListPackets().
+
+    sigCell = asSignalSplit( signal, splitList )
+    
+    PARAMS: signal    - the signal to split
+            splitList - a two-dimensional list of [ startTime, endTime ] values to split the signal.
+    
+    RETURN: sigCell   - an Octave cell of size {1,n}, containing n signals with [ time, value ] pairs.
+    
+    EXAMPLES:
+            sig = asLoadWav("MySignal.wav");        % load a signal
+            lPeaks = asListPeaks( sig, 0.2);        % extract a peak list
+            lDeltas = asListDeltas( lPeaks );       % create a list of delta times
+            lPacks = asListPackets( lDeltas, 2.1 ); % create a packet list
+            sigCell = asSignalSplit( sig, lPacks ); % split the signals into smaller parts
+
+  Notice that the signals in the cell will have different lengths. To unify them, e.g. for plotting
+  or comparing them directly, use asSignalUnify().
+    
+    
 #### asSignalUnify( sigCell )
 #### asSignalShiftUnder( signal1, signal2 )
 #### asSignalStack( sigCell )
