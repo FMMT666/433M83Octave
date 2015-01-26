@@ -23,6 +23,7 @@
 %  - check if signal split function can use an additional length
 %  - rewrite all the missing stuff AGAIN *raaage*
 %  - function to return a length in seconds
+%  - signal to signal cell function (if not already present)
 %
 %
 % PLOTTING 

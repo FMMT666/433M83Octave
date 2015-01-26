@@ -390,7 +390,22 @@
   or comparing them directly, use asSignalUnify().
     
     
-#### asSignalUnify( sigCell )
+#### asSignalUnify()
+
+  Octave can't directly plot multiple signals which have a different length.  
+  This function extends all signals in sigCell to match the longest one.
+  
+
+    sigCellUnified = asSignalUnify( sigCell )
+
+    PARAMS: sigCell        - a cell with n signals of size {1,n}
+    
+    RETURN: sigCellUnified - returns a cell with all signals extended to match the longest signal
+    
+    EXAMPLES:
+            cellNew = asSignalUnify( sigCell );
+        
+    
 #### asSignalShiftUnder( signal1, signal2 )
 #### asSignalStack( sigCell )
 
