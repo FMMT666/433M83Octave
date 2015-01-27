@@ -406,7 +406,27 @@
             cellNew = asSignalUnify( sigCell );
         
     
-#### asSignalShiftUnder( signal1, signal2 )
+#### asSignalShiftUnder()
+
+  Graphically shifts one waveforum under a second one.  
+  Useful for comparing multiple waveforms that don't "just look good" plotted all
+  over each other.
+  
+  To shift multiple signals, also take a look at asSignalStack().
+
+    [ signalNew, offset ] = asSignalShiftUnder( signal1, signal2 )
+
+    PARAMS: signal1   - the signal that should be shifted under the 2nd one
+            signal2   - the reference signal, that will stay on top
+            
+    RETURN: signalNew - a copy of signal1, with an appropriate offset applied.
+            offset    - the offset that was applied to signalNew
+    
+    EXAMPLES:
+            sn = asSignalShiftUnder( s1, s2 )
+            [ sn, offs ] = asSignalShiftUnder( s1, s2 )
+
+
 #### asSignalStack( sigCell )
 
 #### asTest( fileName )
