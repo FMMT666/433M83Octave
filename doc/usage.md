@@ -408,9 +408,11 @@
     
 #### asSignalShiftUnder()
 
-  Graphically shifts one waveforum under a second one.  
-  Useful for comparing multiple waveforms that don't "just look good" plotted all
+  Graphically shifts one signal under a second one.  
+  Useful for comparing multiple waveforms that just don't look good when plotted all
   over each other.
+  
+  Original signals will not be changed.
   
   To shift multiple signals, also take a look at asSignalStack().
 
@@ -427,7 +429,22 @@
             [ sn, offs ] = asSignalShiftUnder( s1, s2 )
 
 
-#### asSignalStack( sigCell )
+#### asSignalStack()
+
+  Graphically shifts all waveforms of a cell array under each other, creating a stack of signals.  
+  The first signal will be on top. All following signals will each be shifted under the
+  previous one.
+
+  Original signals will not be changed.
+ 
+    newSigCell = asSignalStack( sigCell )
+
+    PARAMS: sigCell    - a one dimensional cell of n signals {1,n}
+        
+    RETURN: newSigCell - a copy of sigCell with offsets applied to each of the signals
+    
+    EXAMPLES:
+            cellStacked = asSignalStack( sigCell )   % lol, what are examples for :-)
 
 #### asTest( fileName )
 
