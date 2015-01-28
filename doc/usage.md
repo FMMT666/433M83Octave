@@ -9,6 +9,19 @@
 
 
 ---
+## Usage
+
+### Installation
+
+  As of now (1/2015) there is nothing to install.  
+  Just start Octave, cd to the 433M83Octave directory and type
+  
+    source asSigTools.m
+
+  to load all the functions [...].
+
+
+---
 ## Waveform handling
 
 ### Signal
