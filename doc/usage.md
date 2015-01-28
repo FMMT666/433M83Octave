@@ -2,10 +2,10 @@
 433M83Octave Mini Usage Doc
 ===========================
 
----
+
 ## Preface
 
- Blablabla...
+ I am missing words here...
 
 
 ---
@@ -18,11 +18,15 @@
     (1,:) - time
     (2,:) - value
     
-  todo...
 
 ### Signal Cells
 
-  todo...
+  An Octave cell {1,n}, containing n signals.
+
+    {1,1} - signal1
+    {1,2} - signal2
+    {1,n} - signal<n>
+
 
 ### peakLists
 
@@ -33,7 +37,6 @@
     (3,:) - length
     (4,:) - peaktime
 
-  todo...
 
 ### deltaLists
 
@@ -43,7 +46,6 @@
     (1,:) - time
     (2,:) - time differences
     
-  todo...
 
 ### bitLists
 
@@ -446,7 +448,16 @@
     EXAMPLES:
             cellStacked = asSignalStack( sigCell )   % lol, what are examples for :-)
 
-#### asTest( fileName )
+
+#### asTest()
+
+  Just a function containing some examples.
+
+    asTest( fileName )
+    
+    PARAMS: fileName - string with a file name of a WAV file
+    
+    RETURN: -
 
 
 ---
