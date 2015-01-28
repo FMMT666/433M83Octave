@@ -538,6 +538,23 @@ function tPL = asListPeaks( samples, trigger )
 endfunction
 
 
+
+%*****************************************************************************
+%*** asListPeaksCell
+%*** Repetively calls asListPeaks() with each signal from a signal cell
+%*****************************************************************************
+function cellPeaks = asListPeaksCell( sigCell, trigger )
+
+  cellPeaks = {};
+
+  for n = 1:size( sigCell, 2 );
+    cellPeaks{n} = asListPeaks( sigCell{n}, trigger );
+  end
+
+endfunction
+
+
+
 %*****************************************************************************
 %*** asListDeltas
 %*** ...
@@ -549,3 +566,19 @@ function listDeltas = asListDeltas ( listPeaks )
   end
 endfunction
 
+
+
+%*****************************************************************************
+%*** asListDeltasCell
+%*** Repetively calls asListDeltas() with each signal from a signal cell
+%*****************************************************************************
+function cellDeltas = asListDeltasCell ( listPeaks )
+
+  cellDeltas = {};
+
+  for n = 1:size( listPeaks, 2 );
+    cellDeltas{n} = asListDeltas( listPeaks{n} );
+  end
+
+endfunction
+          
