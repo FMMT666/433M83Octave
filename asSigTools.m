@@ -18,44 +18,17 @@
 %  - I obviously managed to delete most of the code I wrote during the
 %    last 6..7 months :-/
 %
+% CHANGES Vxy:
+%  - see Github
+%
 %
 % TODO:
 %  - check if signal split function can use an additional length
 %  - rewrite all the missing stuff AGAIN *raaage*
 %  - function to return a length in seconds
 %  - signal to signal cell function (if not already present)
-%
-%
-% PLOTTING 
-%
-%   asPlot( signal, [signal/option], ... )
-%   asLineHoriz( signal, level, [color], [linewidth] )
-%   asLinePoly( signal, [color], [linewidth] )
-%   asLinePoly( xs, ys, [color], [linewidth] )
-%
-%
-% WAV FILES
-%
-%   asLoadWav( fileName )
-%
-%
-% SIGNAL MATH
-%
-%   asFilterLowPass( signal, frequency, order )
-%   asListPeaks( signal, triggerLevel  )
-%   asListDeltas( peakList )
-%   asListPackets( deltaList, timeNoPeak )
-%   asFindBitTime( deltaList, tolerancePercent, [ownBitLength] )
-%   asFindSamplesByTime( signal, sTim, [varargin] )
-%   asSignalSplit( signal, sampleStartEnd )
-%   asSignalUnify( sigCell )
-%   asSignalShiftUnder( signal1, signal2 )
-%   asSignalStack( sigCell )
-%
-% OTHER
-%
-%   asTest( fileName )
-% 
+%  - mid-signal follower
+%  - bit times counter (preambles, etc...)
 %
 
 
@@ -119,7 +92,7 @@ function newCell = asSignalStack( cellSignal )
 	
 	if n > 1
 		for i = 1:n-1
-			[ dummy, newCell{i+1} ] = asSignalShiftUnder( newCell{i}, newCell{i+1} );
+			[ newCell{i+1}, dummy ] = asSignalShiftUnder( newCell{i+1}, newCell{i} );
 		end
 	end
 
@@ -181,15 +154,9 @@ function sigCell = asSignalSplit( signal, splitList )
 
   for i = 1 : size( splitList, 1 )
   
-%    sampleStart = splitList(i,1);
-%    sampleEnd   = splitList(i,2);
-
     sampleStart = asFindSamplesByTime( signal, splitList(i,1), 0 );
     sampleEnd   = asFindSamplesByTime( signal, splitList(i,2), 0 );
 
-    disp(sampleStart)
-    disp(sampleEnd)
-    
     if sampleStart > 0 && sampleStart < sampleEnd && sampleEnd <= size(signal(1,:),2)
       sigCell{i} = signal(:, sampleStart:sampleEnd );
     else
@@ -279,7 +246,6 @@ function sNum = asFindSamplesByTime( signal, sTim, varargin )
 
   if length( varargin ) > 0
     % CALCULATE TIME
-
     if varargin{1} > 1
       sNum = 1 + sTim * varargin{1};
       if sNum > size( signal(1,:), 2 )
@@ -403,16 +369,6 @@ endfunction
 
 
 
-%*****************************************************************************
-%*** asListDeltas
-%*** ...
-%*****************************************************************************
-function listDeltas = asListDeltas ( listPeaks )
-  for i = 1:size( listPeaks, 2 ) - 1
-    listDeltas(1,i) = listPeaks( 1, i );
-    listDeltas(2,i) = listPeaks( 1, i+1 ) - listPeaks( 1, i );
-  end
-endfunction
 
 
 
@@ -520,10 +476,7 @@ endfunction
 %*** of size(2,n) that exceed the level specified by "trigger".
 %*** tPL = [ time; length; peakval; peaktime ] of size( 4, number_of_peaks )
 %*****************************************************************************
-function tPL = asListPeaks( samples, trigger  )
-
-  % from the old file, which used precent
-  % tmpTrigger = mean(sBas) + ( trigLevel * ( max(sSig(2,:)) - mean(sBas) ) )
+function tPL = asListPeaks( samples, trigger )
 
   if size( samples, 1 ) ~= 2 then
     error("FindPeaks() requires an array of size(2,n)");
@@ -573,6 +526,7 @@ function tPL = asListPeaks( samples, trigger  )
   end %END for
   
   % UNTESTED UNTESTED UNTESTED
+  % What the heck did I plan here?
 %  if peakFound == 1 
 %    if peakNr > 1 
 %      tPL = resize_matrix( 4, peakNr -1 );
@@ -583,4 +537,15 @@ function tPL = asListPeaks( samples, trigger  )
 %    
 endfunction
 
+
+%*****************************************************************************
+%*** asListDeltas
+%*** ...
+%*****************************************************************************
+function listDeltas = asListDeltas ( listPeaks )
+  for i = 1:size( listPeaks, 2 ) - 1
+    listDeltas(1,i) = listPeaks( 1, i );
+    listDeltas(2,i) = listPeaks( 1, i+1 ) - listPeaks( 1, i );
+  end
+endfunction
 
