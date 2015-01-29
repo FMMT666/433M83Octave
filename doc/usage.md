@@ -41,7 +41,7 @@
     {1,n} - signal<n>
 
 
-### peakLists
+### listPeaks
 
   A four dimensional array of size (4,n).
 
@@ -51,14 +51,19 @@
     (4,:) - peaktime
 
 
-### deltaLists
+### listDeltas
 
   A two dimensional array of size (2,n), containing absolute time stamps of "occurences" [time] and
   time differences to another "occurence".
   
     (1,:) - time
     (2,:) - time differences
-    
+
+
+### listPackets
+
+  todo...
+      
 
 ### bitLists
 
@@ -199,7 +204,7 @@
     sigFilt = asFilterLowPass( signal, frequency, order )
     
     PARAMS: signal    - signal to which the filter should be applied
-            frequency - corner frequency
+            frequency - corner frequency of the low pass filter
             order     - filter order
     RETURN: sigFilt   - the filtered signal
     
@@ -221,11 +226,12 @@
 
     PARAMS: signal       - the signal which should be analysed
             triggerLevel - the threshold level above which peak should be recognized
-    RETURN: an array of size (4, n) with [ time, peakval, length, peaktime ] pairs.
-            time     - the time at which the threshold was exceeded
-            peakval  - value of the topmost sample
-            length   - time spent above the threshold level
-            peaktime - time at which the point of the topmost sample was acquired
+    RETURN: listPeaks    - an array of size (4, n) with [ time, peakval, length, peaktime ] pairs:
+    
+                time     - the time at which the threshold was exceeded
+                peakval  - value of the topmost sample
+                length   - time spent above the threshold level
+                peaktime - time at which the point of the topmost sample was acquired
 
   The 1st index, "time", specifies the time at which the threshold level "triggerLevel" was exceeded.
   Usually (tm) true for the start of a bit or the beginning of a pulse, whereas the 4th index,
@@ -251,23 +257,57 @@
   
   Repetive bits of the same length form several peaks at n*bittime.
 
+
+#### asListPeaksCell()
+
+  Creates and returns a cell of peaks found in a cell of multiple signal.  
+  A handy shortcut to calling asListPeaks() with a cell that may contain multiple signals.
+  
+    cellPeaks = asListPeaks( sigCell, triggerLevel )
+
+    PARAMS: sigCell      - a one dimensional cell of size {1,n}, containing n signals
+            triggerLevel - the threshold level above which peak should be recognized
+    RETURN: cellPeaks - a cell of size {1,n}, containing an array of size (4, n) with  
+                        [ time, peakval, length, peaktime ] pairs:
+                time     - the time at which the threshold was exceeded
+                peakval  - value of the topmost sample
+                length   - time spent above the threshold level
+                peaktime - time at which the point of the topmost sample was acquired
+
     
 #### asListDeltas()
 
   Creates a list of time differences from a list of peaks.  
   Useful for protocols, where the data is coded in terms of time.
 
-    listDeltas = asListDeltas( peakList )
+    listDeltas = asListDeltas( listPeaks )
     
-    PARAMS: peakList   - a list of peaks, e.g. as created by asListPeaks()
+    PARAMS: listPeaks  - a list of peaks, e.g. as created by asListPeaks()
     
     RETURN: listDeltas - a two dimensional [ time, dtime ] array
                          time(n)  = tpeak(n)
                          dtime(n) = tpeak(n+1) - tpeak(n)
 
-  Remembering that peakList is a (4,n) array with [ time, peakval, length, peaktime ],    
-  asListDeltas() uses peakList's "time" (1,:) index to calculate the time differences.
+  Remembering that listPeaks is a (4,n) array with [ time, peakval, length, peaktime ],    
+  asListDeltas() uses listPeaks's "time" (1,:) index to calculate the time differences.
     
+    EXAMPLES:
+            todo...
+
+
+#### asListDeltasCell()
+
+  Creates a cell of listDeltas from a cell of peaks.  
+  A handy shortcut to calling asListDeltas() with a cell that may contain multiple listPeaks.
+
+    cellDeltas = asListDeltas( cellPeaks )
+    
+    PARAMS: cellPeaks  - a cell of listPeak, as created by asListPeaksCell()
+    
+    RETURN: cellDeltas - a one dimensional cell of size {1,n}, containing listDeltas [ time, dtime ] arrays.
+                         time(n)  = tpeak(n)
+                         dtime(n) = tpeak(n+1) - tpeak(n)
+
     EXAMPLES:
             todo...
     
@@ -295,16 +335,16 @@
   ASK modulations) or gaining more information about occurrences of pulses.
   
   
-    [ actList, deltaListShort ] = asListPackets( deltaList, timeNoPeak )
+    [ listPackets, deltaListShort ] = asListPackets( listDeltas, timeNoPeak )
 
-    PARAMS: deltaList  - a list of deltaPeaks, e.g. created by asListDeltas
+    PARAMS: listDeltas - a list of delta times of peaks, e.g. created by asListDeltas()
             timeNoPeak - time of no activity in seconds
             
-    RETURN: actList        - two dimensional (2,n) list with [ starttime, endtime ] of the active areas
+    RETURN: listPackets    - two dimensional (2,n) list with [ starttime, endtime ] of the active areas
             deltaListShort - same as deltaList, except that times > timeNoPeak are removed
     
     EXAMPLES:
-            lp = asListPackets( deltaList, 1.0 );
+            lp = asListPackets( listDeltas, 1.0 );
 
             lp =
               1.4045    2.3376
@@ -314,7 +354,7 @@
              15.1104   16.0618
              ...
 
-            [ lp, dl ] = asListPackets( deltaList, 0.7 );
+            [ lp, dl ] = asListPackets( listDeltas, 0.7 );
             
    
     
@@ -385,12 +425,12 @@
   Splits a signal with several packets into multiple, smaller signals, containing only the
   areas of interest.  
   All split signals are returned in a cell of size {1,n}, where n is the number of signals
-  specified via splitList. The splitList can be obtained with asListPackets().
+  specified via listPackets. This list with packet start and end times can be obtained with asListPackets().
 
-    sigCell = asSignalSplit( signal, splitList )
+    sigCell = asSignalSplit( signal, listPackets )
     
-    PARAMS: signal    - the signal to split
-            splitList - a two-dimensional list of [ startTime, endTime ] values to split the signal.
+    PARAMS: signal      - the signal to split
+            listPackets - a two-dimensional list of [ startTime, endTime ] values to split the signal.
     
     RETURN: sigCell   - an Octave cell of size {1,n}, containing n signals with [ time, value ] pairs.
     
