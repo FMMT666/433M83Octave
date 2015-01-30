@@ -82,7 +82,7 @@
  
     size( signal ) = ( 2, n )
    
-  where 'n' is the number of samples the loaded signal.  
+  where 'n' is the number of samples of the loaded signal.  
  
     signal( 1, : ) contains the time in seconds
     signal( 2, : ) contains the real value of the sample
@@ -93,7 +93,7 @@
 
 #### asLoadWav()
 
-  Loads a WAV file as a signal.
+  Loads a WAV file to a signal variable.
 
     [ signal, sampleRate ] = asLoadWav( fileName )
 
@@ -447,9 +447,9 @@
     
 #### asSignalUnify()
 
-  Octave can't directly plot multiple signals which have a different length.  
-  This function extends all signals in sigCell to match the longest one.
-  
+  Octave can't directly plot multiple signals which have a different length (dimensions).  
+  This function extends all signals in sigCell to match the longest one by repeating the last
+  sampled value.
 
     sigCellUnified = asSignalUnify( sigCell )
 
@@ -467,7 +467,7 @@
   Useful for comparing multiple waveforms that just don't look good when plotted all
   over each other.
   
-  Original signals will not be changed.
+  The original signal will not be changed.
   
   To shift multiple signals, also take a look at asSignalStack().
 
@@ -487,10 +487,9 @@
 #### asSignalStack()
 
   Graphically shifts all waveforms of a cell array under each other, creating a stack of signals.  
-  The first signal will be on top. All following signals will each be shifted under the
-  previous one.
+  The first signal will be on top. Each following signal will be shifted under the previous one.
 
-  Original signals will not be changed.
+  The original signal cell will not be changed.
  
     newSigCell = asSignalStack( sigCell )
 
@@ -501,16 +500,6 @@
     EXAMPLES:
             cellStacked = asSignalStack( sigCell )   % lol, what are examples for :-)
 
-
-#### asTest()
-
-  Just a function containing some examples.
-
-    asTest( fileName )
-    
-    PARAMS: fileName - string with a file name of a WAV file
-    
-    RETURN: -
 
 
 ---
