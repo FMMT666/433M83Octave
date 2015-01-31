@@ -68,7 +68,7 @@ function asTest( wavName )
   asLinePoly( listDeltasShort, 'black' );
 
   % create a new waveform "plotDS" from 1st arg and shift it under "sigOrg"
-  [ plotDS, plotOffs ] = asSignalShiftUnder( listDeltasShort, sigOrg );
+  [ plotDS, plotOffs ] = asSignalStack( listDeltasShort, sigOrg );
   asLinePoly( plotDS );
   
   % create indices of the packet start and end samples from the time list
@@ -79,12 +79,12 @@ endfunction
 
 
 %*****************************************************************************
-%*** asSignalStack( cellSignal )
+%*** asSignalStackCell( cellSignal )
 %*** Creates a new signal cell with each of the signals
 %*** shifted under the previous one.
 %*** Useful for comparing waveforms in a plot.
 %*****************************************************************************
-function newCell = asSignalStack( cellSignal )
+function newCell = asSignalStackCell( cellSignal )
 
 	newCell = cellSignal;
 	
@@ -92,7 +92,7 @@ function newCell = asSignalStack( cellSignal )
 	
 	if n > 1
 		for i = 1:n-1
-			[ newCell{i+1}, dummy ] = asSignalShiftUnder( newCell{i+1}, newCell{i} );
+			[ newCell{i+1}, dummy ] = asSignalStack( newCell{i+1}, newCell{i} );
 		end
 	end
 
@@ -328,10 +328,10 @@ endfunction
 
 
 %*****************************************************************************
-%*** asSignalShiftUnder
+%*** asSignalStack
 %*** Creates a new waveform of "data1" that plots under "data2".
 %*****************************************************************************
-function [ data, offset ] = asSignalShiftUnder( data1, data2 )
+function [ data, offset ] = asSignalStack( data1, data2 )
   offset = max( data1(2,:) ) - min( data2(2,:) );
   data(1,:) = data1(1,:);
   data(2,:) = data1(2,:) - offset;

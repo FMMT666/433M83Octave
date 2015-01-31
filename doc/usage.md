@@ -461,7 +461,7 @@
             cellNew = asSignalUnify( sigCell );
         
     
-#### asSignalShiftUnder()
+#### asSignalStack()
 
   Graphically shifts one signal under a second one.  
   Useful for comparing multiple waveforms that just don't look good when plotted all
@@ -471,7 +471,7 @@
   
   To shift multiple signals, also take a look at asSignalStack().
 
-    [ signalNew, offset ] = asSignalShiftUnder( signal1, signal2 )
+    [ signalNew, offset ] = asSignalStack( signal1, signal2 )
 
     PARAMS: signal1   - the signal that should be shifted under the 2nd one
             signal2   - the reference signal, that will stay on top
@@ -480,25 +480,25 @@
             offset    - the offset that was applied to signalNew
     
     EXAMPLES:
-            sn = asSignalShiftUnder( s1, s2 )
-            [ sn, offs ] = asSignalShiftUnder( s1, s2 )
+            sn = asSignalStack( s1, s2 )
+            [ sn, offs ] = asSignalStack( s1, s2 )
 
 
-#### asSignalStack()
+#### asSignalStackCell()
 
-  Graphically shifts all waveforms of a cell array under each other, creating a stack of signals.  
+  Graphically shifts all signals of a cell array under each other, creating a stack of signals.  
   The first signal will be on top. Each following signal will be shifted under the previous one.
 
   The original signal cell will not be changed.
  
-    newSigCell = asSignalStack( sigCell )
+    newSigCell = asSignalStackCell( sigCell )
 
     PARAMS: sigCell    - a one dimensional cell of n signals {1,n}
         
     RETURN: newSigCell - a copy of sigCell with offsets applied to each of the signals
     
     EXAMPLES:
-            cellStacked = asSignalStack( sigCell )   % lol, what are examples for :-)
+            cellStacked = asSignalStackCell( sigCell )   % lol, what are examples for :-)
 
 
 
