@@ -64,7 +64,7 @@ function asDemo1( )
   [ bitTime, bitDev ] = asFindBitTime( listDeltas, 0.3 );
   
   % isolate multiple packets by time (two peaks > 0.025s)
-  [ listPack, listDeltasShort ] = asListPackets( listDeltas, 0.025 );
+  [ listPack, listDeltasShort ] = asListPacketsByDeltas( listDeltas, 0.025 );
 
   % plot a line for the peaks
   asLinePoly( listPeaks(1:2,:), 'green' );  
@@ -254,7 +254,7 @@ endfunction
 %*** If nothing usefule was found, this function returns 0.
 %*** If bitRate > 0 is given, nothing is looked up but directly calculated.
 %*** This also allows sTim being a complete packet list from
-%*** asListPackets().
+%*** asListPacketsByDeltas().
 %*** If bitRate == 0 given, the sample rate is calculates by the time 
 %*** difference of the first two samples.
 %*****************************************************************************
@@ -297,14 +297,14 @@ endfunction
 
 
 %*****************************************************************************
-%*** asListPackets
+%*** asListPacketsByDeltas
 %*** Assuming that several packets have a long time between them,
 %*** this function returns a list of "active areas", which are separated
 %*** by a time longer than <timeNoPeak>.
 %*** Returns: - (j,2) j number of packets, (j,1) start times (j,2) end times
 %***          - a shortened deltaListShort with all long times removed
 %*****************************************************************************
-function [ actList, deltaListShort ] = asListPackets( deltaList, timeNoPeak )
+function [ actList, deltaListShort ] = asListPacketsByDeltas( deltaList, timeNoPeak )
 	
   actList        = [];
   

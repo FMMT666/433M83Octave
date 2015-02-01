@@ -322,7 +322,7 @@
             todo...
     
     
-#### asListPackets()
+#### asListPacketsByDeltas()
 
   Fed with a deltaList and the timeout value "timeNoPeak", this function can be used to
   extract active area timings (presumably data packets) from a signal.  
@@ -345,7 +345,7 @@
   ASK modulations) or gaining more information about occurrences of pulses.
   
   
-    [ listPackets, deltaListShort ] = asListPackets( listDeltas, timeNoPeak )
+    [ listPackets, deltaListShort ] = asListPacketsByDeltas( listDeltas, timeNoPeak )
 
     PARAMS: listDeltas - a list of delta times of peaks, e.g. created by asListDeltas()
             timeNoPeak - time of no activity in seconds
@@ -354,7 +354,7 @@
             deltaListShort - same as deltaList, except that times > timeNoPeak are removed
     
     EXAMPLES:
-            lp = asListPackets( listDeltas, 1.0 );
+            lp = asListPacketsByDeltas( listDeltas, 1.0 );
 
             lp =
               1.4045    2.3376
@@ -364,7 +364,7 @@
              15.1104   16.0618
              ...
 
-            [ lp, dl ] = asListPackets( listDeltas, 0.7 );
+            [ lp, dl ] = asListPacketsByDeltas( listDeltas, 0.7 );
             
    
     
@@ -435,7 +435,8 @@
   Splits a signal with several packets into multiple, smaller signals, containing only the
   areas of interest.  
   All split signals are returned in a cell of size {1,n}, where n is the number of signals
-  specified via listPackets. This list with packet start and end times can be obtained with asListPackets().
+  specified via listPackets. This list with packet start and end times can be obtained with
+  the asListPackets...() functions.
 
     sigCell = asSignalSplit( signal, listPackets )
     
@@ -445,11 +446,11 @@
     RETURN: sigCell   - an Octave cell of size {1,n}, containing n signals with [ time, value ] pairs.
     
     EXAMPLES:
-            sig = asLoadWav("MySignal.wav");        % load a signal
-            lPeaks = asListPeaks( sig, 0.2);        % extract a peak list
-            lDeltas = asListDeltas( lPeaks );       % create a list of delta times
-            lPacks = asListPackets( lDeltas, 2.1 ); % create a packet list
-            sigCell = asSignalSplit( sig, lPacks ); % split the signals into smaller parts
+            sig = asLoadWav("MySignal.wav");                % load a signal
+            lPeaks = asListPeaks( sig, 0.2);                % extract a peak list
+            lDeltas = asListDeltas( lPeaks );               % create a list of delta times
+            lPacks = asListPacketsByDeltas( lDeltas, 2.1 ); % create a packet list
+            sigCell = asSignalSplit( sig, lPacks );         % split the signals into smaller parts
 
   Notice that the signals in the cell will have different lengths. To unify them, e.g. for plotting
   or comparing them directly, use asSignalUnify().
