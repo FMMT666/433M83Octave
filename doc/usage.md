@@ -115,6 +115,16 @@
             [sig2, bRate] = asLoadWav( "signals/Gurke.wav" );
 
 
+#### asDemo1()
+
+  A quick demonstration to show off some of 433M82Octave's features.
+  
+    asDemo1()
+    
+    PARAMS: -
+    RETURN: -
+    
+
 ---
 ### Plotting
 
@@ -463,7 +473,7 @@
     
 #### asSignalStack()
 
-  Graphically shifts one signal under a second one.  
+  Shifts one signal under a second one.  
   Useful for comparing multiple waveforms that just don't look good when plotted all
   over each other.
   
@@ -486,7 +496,7 @@
 
 #### asSignalStackCell()
 
-  Graphically shifts all signals of a cell array under each other, creating a stack of signals.  
+  Shifts all signals of a cell array under each other, creating a stack of signals.  
   The first signal will be on top. Each following signal will be shifted under the previous one.
 
   The original signal cell will not be changed.

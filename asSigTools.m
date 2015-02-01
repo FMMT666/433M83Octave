@@ -27,15 +27,19 @@
 %  - rewrite all the missing stuff AGAIN *raaage*
 %  - function to return a length in seconds
 %  - signal to signal cell function (if not already present)
-%  - mid-signal follower
+%  - low/mid/high signal follower
 %  - bit times counter (preambles, etc...)
 %
 
 
 %*****************************************************************************
-%*** asTest
+%*** asDemo1
 %*****************************************************************************
-function asTest( wavName )
+%function asDemo1( wavName )
+function asDemo1( )
+
+  % override wav name for a demo
+  wavName = "signals/433M83_02.wav";
 
   % load the signal from disk
   [ sigOrg, sigRate ] = asLoadWav( wavName );
@@ -47,6 +51,7 @@ function asTest( wavName )
   sigFilt = asFilterLowPass( sigOrg, 2000, 2 );
 
   % plot all three signals
+  figure( 1 );
   asPlot( sigOrg, sigBase, sigFilt, 'linewidth', 2 );
 
   % create a list of peaks (absolute trigger level)
@@ -74,6 +79,19 @@ function asTest( wavName )
   % create indices of the packet start and end samples from the time list
   listPackSams = asFindSamplesByTime( sigFilt, listPack, 0 );
 
+  % create a signal cell with signal split into multiple packets
+  sigCell = asSignalSplit( sigFilt, listPack );
+  
+  % unify the length of the signals in the cell for plotting
+  sigCellU = asSignalUnify( sigCell );
+  
+  % stack all signals from the unified signal cell
+  sigCellS = asSignalStackCell( sigCellU );
+
+  % and plot it
+  figure( 2 );
+  asPlot( sigCellS, 'linewidth', 2 );
+  
 endfunction
 
 
