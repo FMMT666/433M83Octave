@@ -2,12 +2,10 @@
 433M83Octave
 ============
 
+  *Please notice that this is NOT complete and NOT functional yet!*
+
+
   A set of tools for [GNU Octave][1], to help analysing and decoding (not only 433MHz) [ISM band][2] signals.
-
-
-
-  *Please notice that this is NOT complete yet!*
-
 
 
 ---
