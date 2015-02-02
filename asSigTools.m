@@ -23,6 +23,9 @@
 %
 %
 % TODO:
+%  - problem in asSignalUnify() -> may create empty signals
+%  - problem in asListPacketsByDeltas() -> can create empty packets
+%    start time equal to end time
 %  - check if signal split function can use an additional length
 %  - rewrite all the missing stuff AGAIN *raaage*
 %  - function to return a length in seconds
@@ -30,6 +33,43 @@
 %  - low/mid/high signal follower
 %  - bit times counter (preambles, etc...)
 %
+
+
+%*****************************************************************************
+%*** asWork
+%*****************************************************************************
+function asWork( )
+
+  wavName = "signals/433M83_02.wav";
+  
+  sig = asLoadWav( wavName );
+  listPeaks = asListPeaks( sig, 0.2 );
+  listDeltas = asListDeltas( listPeaks );
+  listPack = asListPacketsByDeltas( listDeltas, 0.025 );
+
+  sigCell = asSignalSplit( sig, listPack );
+  sigCellU = asSignalUnify( sigCell );
+  sigCellS = asSignalStackCell( sigCellU );
+
+  figure( 1 );
+  asPlot( sigCellS, 'linewidth', 2 );
+
+
+  s1  = sigCellU{1};
+  lp1 = asListPeaks( s1, 0.2 );
+  ld1 = asListDeltas( lp1 );
+
+  figure( 2 );
+  asPlot( s1 );
+  
+  figure( 3 );
+  asPlot( ld1 );
+
+  lpack1 = asListPacketsByDeltas( s1, 0.008 );
+
+  
+endfunction
+
 
 
 %*****************************************************************************
@@ -145,6 +185,8 @@ function sigCellNew = asSignalUnify( sigCell )
 
   % unify all signals
   for i = 1:n
+
+    % TODO: don't create empty signals in a cell
   
     sigCellNew{i} = sigCell{i};
 
@@ -262,14 +304,22 @@ function sNum = asFindSamplesByTime( signal, sTim, varargin )
 
   sNum = 0;
 
+  % TESTING
+  % consider an offset
+  if signal(1,1) > 0
+    sTim -= signal(1,1);
+  end
+
   if length( varargin ) > 0
-    % CALCULATE TIME
+    % CALCULATE TIME (3rd arg)
     if varargin{1} > 1
+      % sample rate was given
       sNum = 1 + sTim * varargin{1};
       if sNum > size( signal(1,:), 2 )
         sNum = 0;
       end
     else
+      % calc sample rate from first two samples
       if length(signal) < 2
         sNum = 0;
       else
@@ -277,7 +327,7 @@ function sNum = asFindSamplesByTime( signal, sTim, varargin )
       end
     end
   else
-    % SEARCH FOR TIME
+    % SEARCH FOR TIME (no 3rd arg)
     for i = 1 : size( signal(1,:), 2 )
       
       val = signal(1,i);
@@ -317,9 +367,9 @@ function [ actList, deltaListShort ] = asListPacketsByDeltas( deltaList, timeNoP
   
   % Save the start time of the first packet.
   % deltaList was derived from a peakList, so this is always true.
+  % TODO: maybe, but it fails if deltaList(1,2) > timeNoPeak; creates
+  %       an empty packet in this case
   actList( pNr, 1 ) = deltaList( 1, 1 );
-
-  lastOne = 0;
 
   for i = 1:n
 
@@ -364,7 +414,6 @@ endfunction
 %*****************************************************************************
 function [ bitTime, bitDev, minTimeMatches ] = asFindBitTime ( listDeltas, tol, varargin )
   
-  % TODO: A little bit strange indeed...
   if length( varargin ) > 0 then
     ownBitTime = varargin{1};
   else
