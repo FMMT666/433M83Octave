@@ -452,24 +452,26 @@
             lPacks = asListPacketsByDeltas( lDeltas, 2.1 ); % create a packet list
             sigCell = asSignalSplit( sig, lPacks );         % split the signals into smaller parts
 
+  If startTime and endTime are equal, the "packet", actually only a single pulse, will be omitted.
+
   Notice that the signals in the cell will have different lengths. To unify them, e.g. for plotting
-  or comparing them directly, use asSignalUnify().
+  or comparing them directly, use asSignalUnifyCell().
     
     
-#### asSignalUnify()
+#### asSignalUnifyCell()
 
   Octave can't directly plot multiple signals which have a different length (dimensions).  
   This function extends all signals in sigCell to match the longest one by repeating the last
   sampled value.
 
-    sigCellUnified = asSignalUnify( sigCell )
+    sigCellUnified = asSignalUnifyCell( sigCell )
 
     PARAMS: sigCell        - a cell with n signals of size {1,n}
     
     RETURN: sigCellUnified - returns a cell with all signals extended to match the longest signal
     
     EXAMPLES:
-            cellNew = asSignalUnify( sigCell );
+            cellNew = asSignalUnifyCell( sigCell );
         
     
 #### asSignalStack()
