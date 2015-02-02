@@ -23,9 +23,6 @@
 %
 %
 % TODO:
-%  - problem in asSignalUnify() -> may create empty signals
-%  - problem in asListPacketsByDeltas() -> can create empty packets
-%    start time equal to end time
 %  - check if signal split function can use an additional length
 %  - rewrite all the missing stuff AGAIN *raaage*
 %  - function to return a length in seconds
@@ -48,14 +45,14 @@ function asWork( )
   listPack = asListPacketsByDeltas( listDeltas, 0.025 );
 
   sigCell = asSignalSplit( sig, listPack );
-  sigCellU = asSignalUnify( sigCell );
+  sigCellU = asSignalUnifyCell( sigCell );
   sigCellS = asSignalStackCell( sigCellU );
 
   figure( 1 );
   asPlot( sigCellS, 'linewidth', 2 );
 
 
-  s1  = sigCellU{1};
+  s1  = sigCellU{ 1 };
   lp1 = asListPeaks( s1, 0.2 );
   ld1 = asListDeltas( lp1 );
 
@@ -65,8 +62,14 @@ function asWork( )
   figure( 3 );
   asPlot( ld1 );
 
-  lpack1 = asListPacketsByDeltas( s1, 0.008 );
+  lpck1 = asListPacketsByDeltas( ld1, 0.008 );
+  
+  s1c  = asSignalSplit( s1, lpck1 );
+  s1cu = asSignalUnifyCell( s1c );
+  s1cs = asSignalStackCell( s1cu );
 
+  figure( 4 );
+  asPlot( s1cs, 'linewidth', 2 );
   
 endfunction
 
@@ -123,7 +126,7 @@ function asDemo1( )
   sigCell = asSignalSplit( sigFilt, listPack );
   
   % unify the length of the signals in the cell for plotting
-  sigCellU = asSignalUnify( sigCell );
+  sigCellU = asSignalUnifyCell( sigCell );
   
   % stack all signals from the unified signal cell
   sigCellS = asSignalStackCell( sigCellU );
@@ -159,11 +162,11 @@ endfunction
 
 
 %*****************************************************************************
-%*** asSignalUnify( signalCell )
+%*** asSignalUnifyCell( signalCell )
 %*** Fed with a cell array of signals, all of them will be extended to the
 %*** size of the largest one.
 %*****************************************************************************
-function sigCellNew = asSignalUnify( sigCell )
+function sigCellNew = asSignalUnifyCell( sigCell )
   
   sigCellNew = {};
 
@@ -206,21 +209,30 @@ endfunction
 %*** Extracts a part of a longer signal.
 %*** sampleStartEnd is an ( n , 2 ) array
 %*** (n,1) sampleStart, (n,2) sampleEnd
-%*** WARNING: This returns a cell array!
+%*** This returns a cell array!
 %*****************************************************************************
 function sigCell = asSignalSplit( signal, splitList )
 
   sigCell = {};
 
+  % do not create empty signal in the signal cell if start- and stop-times
+  % are equal
+  sI = 0; 
+
   for i = 1 : size( splitList, 1 )
-  
+    
     sampleStart = asFindSamplesByTime( signal, splitList(i,1), 0 );
     sampleEnd   = asFindSamplesByTime( signal, splitList(i,2), 0 );
 
-    if sampleStart > 0 && sampleStart < sampleEnd && sampleEnd <= size(signal(1,:),2)
-      sigCell{i} = signal(:, sampleStart:sampleEnd );
+    if sampleEnd == sampleStart
+      sI++;
     else
-      sigCell{i} = [];
+    
+      if sampleStart > 0 && sampleStart < sampleEnd && sampleEnd <= size(signal(1,:),2)
+        sigCell{i - sI} = signal(:, sampleStart:sampleEnd );
+      else
+        sigCell{i - sI} = [];
+      end
     end
   
   end
