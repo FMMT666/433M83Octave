@@ -23,10 +23,12 @@
 %
 %
 % TODO:
-%  - check if signal split function can use an additional length
+%  - bit-window-time detection
+%  - optional length for asSignalUnifyCell(); (snip or extend)
+%  - check if signal split function can use an additional length (wat???)
 %  - rewrite all the missing stuff AGAIN *raaage*
 %  - function to return a length in seconds
-%  - signal to signal cell function (if not already present)
+%  - signal to signal-cell function (if not already present)
 %  - low/mid/high signal follower
 %  - bit times counter (preambles, etc...)
 %
@@ -51,25 +53,27 @@ function asWork( )
   figure( 1 );
   asPlot( sigCellS, 'linewidth', 2 );
 
+  for i = 1:size( sigCellU, 2 );
 
-  s1  = sigCellU{ 1 };
-  lp1 = asListPeaks( s1, 0.2 );
-  ld1 = asListDeltas( lp1 );
+    s1  = sigCellU{ i };
+    lp1 = asListPeaks( s1, 0.2 );
+    ld1 = asListDeltas( lp1 );
 
-  figure( 2 );
-  asPlot( s1 );
-  
-  figure( 3 );
-  asPlot( ld1 );
+%    figure( 2 );
+%    asPlot( s1 );
+%    figure( 3 );
+%    asPlot( ld1 );
 
-  lpck1 = asListPacketsByDeltas( ld1, 0.008 );
-  
-  s1c  = asSignalSplit( s1, lpck1 );
-  s1cu = asSignalUnifyCell( s1c );
-  s1cs = asSignalStackCell( s1cu );
+    lpck1 = asListPacketsByDeltas( ld1, 0.008 );
+    
+    s1c  = asSignalSplit( s1, lpck1 );
+    s1cu = asSignalUnifyCell( s1c );
+    s1cs = asSignalStackCell( s1cu );
 
-  figure( 4 );
-  asPlot( s1cs, 'linewidth', 2 );
+    figure( 2 + i-1 );
+    asPlot( s1cs, 'linewidth', 2 );
+
+  end
   
 endfunction
 
