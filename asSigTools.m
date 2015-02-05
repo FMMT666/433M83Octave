@@ -709,3 +709,16 @@ function sFo = asSignalFollowMinMax( sig, fallOff, varargin )
 	
 endfunction
 
+
+%*****************************************************************************
+%*** asSignalBlend
+%*** Creates a new signal from a linear value interpolation of two others.
+%*** The blendFac (0..1) decides which point to pick:
+%***   0   - signal1 100% 
+%***   0.3 - signal1  70%, signal2 30%
+%***   1   - signal2 100%
+%*****************************************************************************
+function sBlend = asSignalBlend( sig1, sig2, blendFac )
+
+endfunction
+
