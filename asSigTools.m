@@ -78,7 +78,6 @@ function asWork( )
 endfunction
 
 
-
 %*****************************************************************************
 %*** asDemo1
 %*****************************************************************************
@@ -642,7 +641,7 @@ endfunction
 %*** asListDeltas
 %*** ...
 %*****************************************************************************
-function listDeltas = asListDeltas ( listPeaks )
+function listDeltas = asListDeltas( listPeaks )
   for i = 1:size( listPeaks, 2 ) - 1
     listDeltas(1,i) = listPeaks( 1, i );
     listDeltas(2,i) = listPeaks( 1, i+1 ) - listPeaks( 1, i );
@@ -655,7 +654,7 @@ endfunction
 %*** asListDeltasCell
 %*** Repetively calls asListDeltas() with each signal from a signal cell
 %*****************************************************************************
-function cellDeltas = asListDeltasCell ( listPeaks )
+function cellDeltas = asListDeltasCell( listPeaks )
 
   cellDeltas = {};
 
@@ -665,3 +664,48 @@ function cellDeltas = asListDeltasCell ( listPeaks )
 
 endfunction
           
+
+
+%*****************************************************************************
+%*** asSignalFollowMinMax
+%*** Creates a new signal that tries to follow the minimum or maximum
+%*** peaks of a signal, depending on the sign and value of <fallOff>
+%*** TODO:
+%***  - fallOff == zero
+%***  - better starting procedure
+%*****************************************************************************
+function sFo = asSignalFollowMinMax( sig, fallOff, varargin )
+
+  sFo = [];
+  sFo(1,:) = sig(1,:);
+
+  % set follow value to start of signal (for now)
+  mmval = sig(2,1);
+
+	% to increase the speed, even though this doubles the for loop...
+  if fallOff < 0
+    % --- follow min
+	  for i=1:length( sig )
+      if sig(2,i) < mmval
+        mmval = sig(2,i);
+      else
+        mmval -= fallOff;
+      end % END signal greater than follow value
+      sFo(2,i) = mmval;
+	  end % END for
+	
+  else
+    % --- follow max
+	  for i=1:length( sig )
+      if sig(2,i) > mmval
+        mmval = sig(2,i);
+      else
+        mmval -= fallOff;
+      end % END signal greater than follow value
+      sFo(2,i) = mmval;
+	  end % END for
+
+  end % END else fallOff
+	
+endfunction
+

@@ -514,6 +514,37 @@
             cellStacked = asSignalStackCell( sigCell )   % lol, what are examples for :-)
 
 
+#### asSignalFollowMinMax()
+
+  Creates a new signal, that either follows all maximum or minimum peaks of a given signal.  
+  Useful for calculating dynamic thresholds.
+  
+    sigMinMax = asSignalFollowMinMax( signal, fallOff, [type] )
+    
+    PARAMS: signal    - the input signal
+            fallOff   - value that specifies the peak falloff (see below)
+                        A positive value follows the max peaks, whereas a negative one
+                        follows the min peaks.
+            type      - future upgrade, specifies the falloff curve shape
+                        'linear', '1/x', 'exp', ...
+                        defaults to 'linear' for now.
+            
+    RETURN: sigMinMax - a two-dimensional signal of [ time, value ] with either
+                        min or max values
+
+  As for now, only 'linear' falloff is supported and selected by default.
+  
+  linear:
+   Depending on the sign of fallOff, which either selects if the max peaks (>0) or the min peaks
+   (<0) should be followed, the output signal always follows a peak to its max/min value, but then
+   falls off (either down or up) linear, with fallOff subtracted every sample
+   
+     sigMinMax(t) = peak - (t * fallOff)
+   
+   until the next peak appears.
+
+   todo...
+   
 
 ---
 ## Examples
