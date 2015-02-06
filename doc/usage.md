@@ -202,9 +202,51 @@
             a = [ 0, 10, 20, 30 ];
             b = [ 1,  5, -3,  4 ];
             asLinePoly( a, b, 'red' );
+
+
+#### asSignalStack()
+
+  Shifts one signal under a second one.  
+  Useful for comparing multiple waveforms that just don't look good when plotted all
+  over each other.
+  
+  The original signal will not be changed.
+  
+  To shift multiple signals, also take a look at asSignalStack().
+
+    [ signalNew, offset ] = asSignalStack( signal1, signal2 )
+
+    PARAMS: signal1   - the signal that should be shifted under the 2nd one
+            signal2   - the reference signal, that will stay on top
+            
+    RETURN: signalNew - a copy of signal1, with an appropriate offset applied.
+            offset    - the offset that was applied to signalNew
     
+    EXAMPLES:
+            sn = asSignalStack( s1, s2 )
+            [ sn, offs ] = asSignalStack( s1, s2 )
+
+
+#### asSignalStackCell()
+
+  Shifts all signals of a cell array under each other, creating a stack of signals.  
+  The first signal will be on top. Each following signal will be shifted under the previous one.
+
+  The original signal cell will not be changed.
+ 
+    newSigCell = asSignalStackCell( sigCell )
+
+    PARAMS: sigCell    - a one dimensional cell of n signals {1,n}
+        
+    RETURN: newSigCell - a copy of sigCell with offsets applied to each of the signals
+    
+    EXAMPLES:
+            cellStacked = asSignalStackCell( sigCell )   % lol, what are examples for :-)
+
+
+
 ---
-### Math
+### Filter
 
 #### asFilterLowPass()
 
@@ -223,6 +265,46 @@
     EXAMPLES:
             sigFilt1 = asFilterLowPass( sigOrg, 50, 2 );
 
+
+#### asFilterMinMax()
+
+  Creates a new signal, that either follows (aka "clamps") all maximum or minimum peaks of a given signal.  
+  Useful for calculating dynamic thresholds.
+  
+    sigMinMax = asFilterMinMax( signal, fallOff, [type] )
+    
+    PARAMS: signal    - the input signal
+            fallOff   - value that specifies the peak falloff (see below)
+                        A positive value follows the max peaks, whereas a negative one
+                        follows the min peaks.
+            type      - future upgrade, specifies the falloff curve shape
+                        'linear', '1/x', 'exp', ...
+                        defaults to 'linear' for now.
+            
+    RETURN: sigMinMax - a two-dimensional signal of [ time, value ] with either
+                        min or max values
+
+  As for now, only 'linear' falloff is supported and selected by default.
+  
+  linear:
+   Depending on the sign of fallOff, which either selects if the max peaks (>0) or the min peaks
+   (<0) should be followed, the output signal always follows a peak to its max/min value, but then
+   falls off (either down or up) linear, with fallOff subtracted every sample
+     sigMinMax(t) = peak - (t * fallOff)
+   until the next peak appears.
+
+  exponential:
+   todo...
+   
+  halfed:
+   todo...
+
+  todo...
+
+
+
+---
+### Segmenting
 
 #### asListPeaks()
 
@@ -366,7 +448,6 @@
 
             [ lp, dl ] = asListPacketsByDeltas( listDeltas, 0.7 );
             
-   
     
 #### asFindBitTime()
 
@@ -472,79 +553,25 @@
     
     EXAMPLES:
             cellNew = asSignalUnifyCell( sigCell );
-        
-    
-#### asSignalStack()
 
-  Shifts one signal under a second one.  
-  Useful for comparing multiple waveforms that just don't look good when plotted all
-  over each other.
+
+#### asSignalBlend()
+
+  Creates a new signal blend from a weighted mean of two signals.  
+  Useful for creating dynamic threshold levels.
   
-  The original signal will not be changed.
-  
-  To shift multiple signals, also take a look at asSignalStack().
-
-    [ signalNew, offset ] = asSignalStack( signal1, signal2 )
-
-    PARAMS: signal1   - the signal that should be shifted under the 2nd one
-            signal2   - the reference signal, that will stay on top
-            
-    RETURN: signalNew - a copy of signal1, with an appropriate offset applied.
-            offset    - the offset that was applied to signalNew
+    sigBlend = asSignalBlend( signal1, signal2, blendFac )
     
-    EXAMPLES:
-            sn = asSignalStack( s1, s2 )
-            [ sn, offs ] = asSignalStack( s1, s2 )
+    PARAMS: signal1  - first signal
+            signal2  - second signal
+            lendFac  - value 0..1; percentage/distribution of sigLo to sigHi
+                       0   - fully signal1
+                       1   - fully signal2
+                       0.3 - 70% of signal1, 30% signal2
+                       0.5 - 50% of both (half)
 
-
-#### asSignalStackCell()
-
-  Shifts all signals of a cell array under each other, creating a stack of signals.  
-  The first signal will be on top. Each following signal will be shifted under the previous one.
-
-  The original signal cell will not be changed.
- 
-    newSigCell = asSignalStackCell( sigCell )
-
-    PARAMS: sigCell    - a one dimensional cell of n signals {1,n}
-        
-    RETURN: newSigCell - a copy of sigCell with offsets applied to each of the signals
+    RETURN: sigBlend - two dimensional signal of [ time, value ]
     
-    EXAMPLES:
-            cellStacked = asSignalStackCell( sigCell )   % lol, what are examples for :-)
-
-
-#### asSignalFollowMinMax()
-
-  Creates a new signal, that either follows all maximum or minimum peaks of a given signal.  
-  Useful for calculating dynamic thresholds.
-  
-    sigMinMax = asSignalFollowMinMax( signal, fallOff, [type] )
-    
-    PARAMS: signal    - the input signal
-            fallOff   - value that specifies the peak falloff (see below)
-                        A positive value follows the max peaks, whereas a negative one
-                        follows the min peaks.
-            type      - future upgrade, specifies the falloff curve shape
-                        'linear', '1/x', 'exp', ...
-                        defaults to 'linear' for now.
-            
-    RETURN: sigMinMax - a two-dimensional signal of [ time, value ] with either
-                        min or max values
-
-  As for now, only 'linear' falloff is supported and selected by default.
-  
-  linear:
-   Depending on the sign of fallOff, which either selects if the max peaks (>0) or the min peaks
-   (<0) should be followed, the output signal always follows a peak to its max/min value, but then
-   falls off (either down or up) linear, with fallOff subtracted every sample
-   
-     sigMinMax(t) = peak - (t * fallOff)
-   
-   until the next peak appears.
-
-   todo...
-   
 
 ---
 ## Examples
@@ -555,7 +582,6 @@
 ### Snipping signals packets
 
 ### Comparing signals packets
-
 
 
 ---
