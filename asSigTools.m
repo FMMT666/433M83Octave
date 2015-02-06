@@ -714,11 +714,18 @@ endfunction
 %*** asSignalBlend
 %*** Creates a new signal from a linear value interpolation of two others.
 %*** The blendFac (0..1) decides which point to pick:
-%***   0   - signal1 100% 
-%***   0.3 - signal1  70%, signal2 30%
-%***   1   - signal2 100%
+%***   0   - sigLow  100% 
+%***   0.3 - sigLow   70%, sigHigh 30%
+%***   1   - sigHigh 100%
 %*****************************************************************************
-function sBlend = asSignalBlend( sig1, sig2, blendFac )
+function sBlend = asSignalBlend( sigLow, sigHigh, blendFac )
+
+  % TODO: samity checks (size of signals, etc...)
+  
+  sBlend = [];
+  sBlend(1,:) = sig1(1,:);
+
+  % where's my code???
 
 endfunction
 
