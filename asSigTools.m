@@ -23,14 +23,13 @@
 %
 %
 % TODO:
-%  - bit-window-time detection
 %  - optional length for asSignalUnifyCell(); (snip or extend)
 %  - check if signal split function can use an additional length (wat???)
 %  - rewrite all the missing stuff AGAIN *raaage*
 %  - function to return a length in seconds
 %  - signal to signal-cell function (if not already present)
-%  - low/mid/high signal follower
 %  - bit times counter (preambles, etc...)
+%  - there's a findpeaks() function in the signal(?) package
 %
 
 
@@ -667,14 +666,14 @@ endfunction
 
 
 %*****************************************************************************
-%*** asSignalFollowMinMax
+%*** asFilterMinMax
 %*** Creates a new signal that tries to follow the minimum or maximum
 %*** peaks of a signal, depending on the sign and value of <fallOff>
 %*** TODO:
 %***  - fallOff == zero
 %***  - better starting procedure
 %*****************************************************************************
-function sFo = asSignalFollowMinMax( sig, fallOff, varargin )
+function sFo = asFilterMinMax( sig, fallOff, varargin )
 
   sFo = [];
   sFo(1,:) = sig(1,:);
@@ -714,18 +713,27 @@ endfunction
 %*** asSignalBlend
 %*** Creates a new signal from a linear value interpolation of two others.
 %*** The blendFac (0..1) decides which point to pick:
-%***   0   - sigLow  100% 
-%***   0.3 - sigLow   70%, sigHigh 30%
-%***   1   - sigHigh 100%
+%***   0   - sigLo  100% 
+%***   0.3 - sigLo   70%, sigHi 30%
+%***   1   - sigHi  100%
 %*****************************************************************************
-function sBlend = asSignalBlend( sigLow, sigHigh, blendFac )
+function sBlend = asSignalBlend( sigLo, sigHi, blendFac )
 
   % TODO: samity checks (size of signals, etc...)
+
+	if blendFac < 0
+		blendFac = 0;
+	end
+
+	if blendFac > 1.0	
+		blendFac = 1.0;
+	end
+	
   
   sBlend = [];
-  sBlend(1,:) = sig1(1,:);
+  sBlend(1,:) = sigLo(1,:);
 
-  % where's my code???
+	sBlend(2,:) = ( sigHi(2,:) - sigLo(2,:) ) * blendFac + sigLo(2,:);
 
 endfunction
 
