@@ -115,11 +115,12 @@
             [sig2, bRate] = asLoadWav( "signals/Gurke.wav" );
 
 
-#### asDemo1()
+#### asDemo<n>()
 
   A quick demonstration to show off some of 433M82Octave's features.
   
     asDemo1()
+    asDemo2()
     
     PARAMS: -
     RETURN: -
@@ -244,6 +245,31 @@
             cellStacked = asSignalStackCell( sigCell )   % lol, what are examples for :-)
 
 
+#### asSignalAmplitude()
+
+  Modifies a signal's amplitude bei either an absolute factor or to match another signal's
+  amplitude, weighted by a factor.  
+  Useful for comparing different signals or any other [time, value] arrays (signals, listDeltas,
+  linePolys, etc...) to each other.
+
+    sigAmp = asSignalAmplitude( signal, factor, [sigRef] )
+
+  PARAMS: signal - the input signal 
+          factor - factor to multiply signal with
+          sigRef - optional; if given, the input signal's amplitude will be matched to fit
+                   sigRef's amplitude.
+                   Factor is then used as a multiplier.
+          
+  RETURN: sigAmp - a copy of signal with modified amplitude
+  
+  EXAMPLES:
+          % multiplies signal1's values with 2.34
+          signal2 = asSignalAmplitude( signal1, 2.34 );
+          
+          % set lDelta1 amplitude to 75% of signal1 and draw both in the same plot
+          lDelta2 = asSignalAmplitude( lDelta1, 0.75, signal1 );
+          asPlot( signal1 );
+          asLinePoly( lDelta2 );
 
 ---
 ### Filter

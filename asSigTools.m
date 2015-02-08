@@ -756,7 +756,6 @@ function sBlend = asSignalBlend( sigLo, sigHi, blendFac )
 	if blendFac > 1.0	
 		blendFac = 1.0;
 	end
-	
   
   sBlend = [];
   sBlend(1,:) = sigLo(1,:);
@@ -765,4 +764,29 @@ function sBlend = asSignalBlend( sigLo, sigHi, blendFac )
 
 endfunction
 
+
+%*****************************************************************************
+%*** asSignalAmplitude
+%*** Modifies a signal's amplitude by an absolute factor or to match
+%*** a given signal's amplitude.
+%*** As usual, the original signal will not be changed.
+%*****************************************************************************
+function sigAmp = asSignalAmplitude( sig, factor, varargin )
+
+  sigAmp(1,:) = sig(1,:);
+
+  if length( varargin ) == 1
+    % use factor as a multiplier to the reference signal's amplitude
+    % TODO: check dimension of varargin; could also produce div by zero
+    
+    facMatch = (max(varargin{1}(2,:)) - min(varargin{1}(2,:))) / (max(sig(2,:)) - min(sig(2,:)));
+
+    sigAmp(2,:) = sig(2,:) * facMatch * factor;
+    
+  else
+    % just use <factor> as it is, an absolute value
+    sigAmp(2,:) = sig(2,:) * factor;
+  end
+  
+endfunction
 
