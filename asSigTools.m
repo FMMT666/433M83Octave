@@ -140,6 +140,34 @@ function asDemo1( )
 endfunction
 
 
+%*****************************************************************************
+%*** asDemo2
+%*****************************************************************************
+function asDemo2( )
+
+  % load wav
+  sig = asLoadWav ("signals/433M827_02.wav" );
+  
+  % filter it
+  sigFilt = asFilterLowPass( sig, 5000, 2 );
+  
+  % create a high peak follow signal
+  sh = asFilterMinMax ( sigFilt , 0.0001 );
+
+  % create a low peak follow signal
+  sl = asFilterMinMax ( sigFilt , -0.0001 );
+  
+  % create a mid level signal
+  sm = asSignalBlend( sl, sh, 0.5 );
+  
+  % and filter it
+  smFilt = asFilterLowPass( sm, 50, 2 );
+  
+  % plot all of these
+  asPlot( sigFilt, sh, sl, sm, smFilt, 'linewidth', 2 );
+  
+endfunction
+
 
 %*****************************************************************************
 %*** asSignalStackCell( cellSignal )
@@ -736,4 +764,5 @@ function sBlend = asSignalBlend( sigLo, sigHi, blendFac )
 	sBlend(2,:) = ( sigHi(2,:) - sigLo(2,:) ) * blendFac + sigLo(2,:);
 
 endfunction
+
 
