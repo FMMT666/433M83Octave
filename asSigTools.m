@@ -790,3 +790,26 @@ function sigAmp = asSignalAmplitude( sig, factor, varargin )
   
 endfunction
 
+
+%*****************************************************************************
+%*** asSignalMatch
+%*** Modifies a signal's offset to match a 2nd signal.
+%*** Parameter move sets bottom vertical position of sig1 anywhere between
+%*** bottom or top of sig2 (0..1).
+%*** If <varargin> is given and >0, the amplitude will be matched too.
+%*** As usual, the original signal will not be changed.
+%*****************************************************************************
+function sigOff = asSignalMatch( sig1, sig2, move, varargin )
+
+  if length( varargin ) == 1
+    % modify amplitude via asSignalAmplitude()
+    sigOff = asSignalAmplitude( sig1, varargin{1}, sig2 );
+  else
+    sigOff = sig1;
+  end
+
+  offs = min( sigOff(2,:) ) - min( sig2(2,:) );
+  sigOff(2,:) -= offs - ( move * ( max(sig2(2,:)) - min(sig2(2,:)) ) );
+
+endfunction
+

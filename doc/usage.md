@@ -258,7 +258,10 @@
           factor - factor to multiply signal with
           sigRef - optional; if given, the input signal's amplitude will be matched to fit
                    sigRef's amplitude.
-                   Factor is then used as a multiplier.
+                   Factor is then used as a normalized factor to sigRef's amplitude.
+                   0.5 - half amplitude (50%)
+                   0.7 - 70%
+                   1.2 - 120%
           
   RETURN: sigAmp - a copy of signal with modified amplitude
   
@@ -270,6 +273,36 @@
           lDelta2 = asSignalAmplitude( lDelta1, 0.75, signal1 );
           asPlot( signal1 );
           asLinePoly( lDelta2 );
+
+
+#### asSignalMatch()
+
+  Modifies the offset and amplitude of a signal to match a 2nd one.  
+  Useful for plotting signals in signals.
+  
+  The bottom of signal1 will be shifted to match the vertical position of signal2,
+  anywhere from bottom (mode == 0) to top (move == 1) or beyond.
+  
+    sigMat = asSignalMatch( signal1, sigRef, move, [scale] )
+
+    PARAMS: signal1 - the signal to be modified
+            sigRef  - the reference signal
+            move    - value from 0..1 (or more :-) to shift signal1 along the
+                      vertical position of sigRef. From bottom to top, 0..1.
+                      Smaller or greater values can also be used.
+            scale   - optional; if given, the amplitude of signal1 can be matched to sigRef.
+                      This calls asSignalAmplitude( signal1, scale, sigRef)
+                    
+    RETURN: sigMat  - a modified copy of signal1
+
+    EXAMPLES:
+            % move the bottom of signal1 to the vertical middle of signal2.
+            sm = asSignalMatch( signal1, signal2, 0.5 );
+
+            % move and plot signal1 and listDelta, at 25% height in the middle (50%)
+            asPlot( signal1 );
+            ldm = asSignalMatch( listDeltas, signal1, 0.5, 0.25 );
+            asLinePoly( ldm );
 
 ---
 ### Filter
