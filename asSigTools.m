@@ -33,49 +33,6 @@
 %
 
 
-%*****************************************************************************
-%*** asWork
-%*****************************************************************************
-function asWork( )
-
-  wavName = "signals/433M83_02.wav";
-  
-  sig = asLoadWav( wavName );
-  listPeaks = asListPeaks( sig, 0.2 );
-  listDeltas = asListDeltas( listPeaks );
-  listPack = asListPacketsByDeltas( listDeltas, 0.025 );
-
-  sigCell = asSignalSplit( sig, listPack );
-  sigCellU = asSignalUnifyCell( sigCell );
-  sigCellS = asSignalStackCell( sigCellU );
-
-  figure( 1 );
-  asPlot( sigCellS, 'linewidth', 2 );
-
-  for i = 1:size( sigCellU, 2 );
-
-    s1  = sigCellU{ i };
-    lp1 = asListPeaks( s1, 0.2 );
-    ld1 = asListDeltas( lp1 );
-
-%    figure( 2 );
-%    asPlot( s1 );
-%    figure( 3 );
-%    asPlot( ld1 );
-
-    lpck1 = asListPacketsByDeltas( ld1, 0.008 );
-    
-    s1c  = asSignalSplit( s1, lpck1 );
-    s1cu = asSignalUnifyCell( s1c );
-    s1cs = asSignalStackCell( s1cu );
-
-    figure( 2 + i-1 );
-    asPlot( s1cs, 'linewidth', 2 );
-
-  end
-  
-endfunction
-
 
 %*****************************************************************************
 %*** asDemo1
@@ -144,6 +101,83 @@ endfunction
 %*** asDemo2
 %*****************************************************************************
 function asDemo2( )
+
+  wavName = "signals/433M83_02.wav";
+  
+  sig = asLoadWav( wavName );
+  listPeaks = asListPeaks( sig, 0.2 );
+  listDeltas = asListDeltas( listPeaks );
+  listPack = asListPacketsByDeltas( listDeltas, 0.025 );
+
+  sigCell = asSignalSplit( sig, listPack );
+  sigCellU = asSignalUnifyCell( sigCell );
+  sigCellS = asSignalStackCell( sigCellU );
+
+  figure( 1 );
+  asPlot( sigCellS, 'linewidth', 2 );
+
+  for i = 1:size( sigCellU, 2 );
+
+    s1  = sigCellU{ i };
+    lp1 = asListPeaks( s1, 0.2 );
+    ld1 = asListDeltas( lp1 );
+
+%    figure( 2 );
+%    asPlot( s1 );
+%    figure( 3 );
+%    asPlot( ld1 );
+
+    lpck1 = asListPacketsByDeltas( ld1, 0.008 );
+    
+    s1c  = asSignalSplit( s1, lpck1 );
+    s1cu = asSignalUnifyCell( s1c );
+    s1cs = asSignalStackCell( s1cu );
+
+    figure( 2 + i-1 );
+    asPlot( s1cs, 'linewidth', 2 );
+
+  end
+  
+endfunction
+
+
+%*****************************************************************************
+%*** asDemo3
+%*****************************************************************************
+function asDemo3( )
+
+  % same as previous operations, load signal and split it into packets
+  wavName = "signals/433M83_02.wav";
+  sig = asLoadWav( wavName );
+  listPeaks = asListPeaks( sig, 0.2 );
+  listDeltas = asListDeltas( listPeaks );
+  listPack = asListPacketsByDeltas( listDeltas, 0.025 );
+  sigCell = asSignalSplit( sig, listPack );
+  sigCellU = asSignalUnifyCell( sigCell );
+  sigCellS = asSignalStackCell( sigCellU );
+
+  % pick one packet
+  s1 = sigCell{2};
+  
+  % get peaks and deltas
+  lp1 = asListPeaks( s1, 0.2 );
+  ld1 = asListDeltas( lp1 );
+  
+  % plot the signal
+  asPlot( s1, 'linewidth', 2);
+  
+  % mod delta list's amplitude and offset for drawing it onto the signal
+  ld1m = asSignalMatch( ld1, s1, 0.25, 0.5 );
+  asLinePoly( ld1m );
+
+
+endfunction
+
+
+%*****************************************************************************
+%*** asDemo4
+%*****************************************************************************
+function asDemo4( )
 
   % load wav
   sig = asLoadWav ("signals/433M827_02.wav" );

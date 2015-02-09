@@ -367,10 +367,10 @@
 
 #### asListPeaks()
 
-  Creates and returns a list of peaks found in a signal.  
+  Creates and returns a list of peaks found in a signal. Useful for "Return to Zero" signals.  
   Not a perfect solution for now, but still helpful for finding pulses or determining bit lengths.
   
-  For now, asListPeaks() uses a simple, static threshold level (without hysterisis) and
+  For now, asListPeaks() uses a simple, static threshold level (without hysteresis) and
   no fancy dynamically adpated trigger levels (TODO).
   
     listPeaks = asListPeaks( signal, triggerLevel )
@@ -429,7 +429,8 @@
 #### asListDeltas()
 
   Creates a list of time differences from a list of peaks.  
-  Useful for protocols, where the data is coded in terms of time.
+  Useful for protocols, where the data is coded in terms of time or pulses, like, e.g.
+  "Return to Zero" transfers.
 
     listDeltas = asListDeltas( listPeaks )
     
