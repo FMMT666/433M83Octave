@@ -156,36 +156,41 @@ function asDemo3( )
   sigCellU = asSignalUnifyCell( sigCell );
   sigCellS = asSignalStackCell( sigCellU );
 
-  % pick one packet
-  s1 = sigCell{2};
-  
-  % get peaks and deltas
-  lp1 = asListPeaks( s1, 0.2 );
-  ld1 = asListDeltas( lp1 );
-  
-  % plot the signal
-  figure( 1 );
-  asPlot( s1, 'linewidth', 2);
-  
-  % mod delta list's amplitude and offset for drawing it onto the signal
-  ld1m = asSignalMatch( ld1, s1, 0.25, 0.5 );
-  asLinePoly( ld1m );
+  % mhhh...
+  for n=1:length(sigCell)
 
-  % real plot with original listDelta's values
-  figure( 2 );
-  asPlot( ld1 );
+    % pick one packet
+    s1 = sigCell{ n };
+    
+    % get peaks and deltas
+    lp1 = asListPeaks( s1, 0.2 );
+    ld1 = asListDeltas( lp1 );
+    
+    % plot the signal
+%    figure( 1 );
+%    asPlot( s1, 'linewidth', 2);
+    
+    % mod delta list's amplitude and offset for drawing it onto the signal
+%    ld1m = asSignalMatch( ld1, s1, 0.25, 0.5 );
+%    asLinePoly( ld1m );
 
-  % extract the packets from the ORIGINAL(!) delta list!
-  % one can't use ld1m here, because the delta times were
-  % previously modified by asSignalMatch() above ^^^
-  lpck1 = asListPacketsByDeltas( ld1, 0.008 );
-  
-  % split the packets, unify, stack and plot
-  s1cell  = asSignalSplit( s1, lpck1 );
-  s1cellu = asSignalUnifyCell( s1cell );
-  s1cells = asSignalStackCell( s1cellu );
-  figure( 3 );
-  asPlot( s1cells , 'linewidth', 2 );
+    % real plot with original listDelta's values
+%    figure( 2 );
+%    asPlot( ld1 );
+
+    % extract the packets from the ORIGINAL(!) delta list!
+    % one can't use ld1m here, because the delta times were
+    % previously modified by asSignalMatch() above ^^^
+    lpck1 = asListPacketsByDeltas( ld1, 0.008 );
+    
+    % split the packets, unify, stack and plot
+    s1cell  = asSignalSplit( s1, lpck1 );
+    s1cellu = asSignalUnifyCell( s1cell );
+    s1cells = asSignalStackCell( s1cellu );
+    figure( n );
+    asPlot( s1cells , 'linewidth', 2 );
+
+  end % END for
 
 endfunction
 
