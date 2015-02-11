@@ -254,25 +254,30 @@
 
     sigAmp = asSignalAmplitude( signal, factor, [sigRef] )
 
-  PARAMS: signal - the input signal 
-          factor - factor to multiply signal with
-          sigRef - optional; if given, the input signal's amplitude will be matched to fit
-                   sigRef's amplitude.
-                   Factor is then used as a normalized factor to sigRef's amplitude.
-                   0.5 - half amplitude (50%)
-                   0.7 - 70%
-                   1.2 - 120%
+    PARAMS: signal - the input signal 
+            factor - factor to multiply signal with
+            sigRef - optional; if given, the input signal's amplitude will be matched to fit
+                     sigRef's amplitude.
+                     Factor is then used as a normalized factor to sigRef's amplitude.
+                     0.5 - half amplitude (50%)
+                     0.7 - 70%
+                     1.2 - 120%
           
-  RETURN: sigAmp - a copy of signal with modified amplitude
+    RETURN: sigAmp - a copy of signal with modified amplitude
+
+  WARNING:  
+   Make sure that you don't use modified deltaLists to to extract packets via
+   asListPacketsByDeltas(). This _won't_ work because the shifted amplitude will
+   create wrong time offsets and result in empty lists!
   
-  EXAMPLES:
-          % multiplies signal1's values with 2.34
-          signal2 = asSignalAmplitude( signal1, 2.34 );
+    EXAMPLES:
+            % multiplies signal1's values with 2.34
+            signal2 = asSignalAmplitude( signal1, 2.34 );
           
-          % set lDelta1 amplitude to 75% of signal1 and draw both in the same plot
-          lDelta2 = asSignalAmplitude( lDelta1, 0.75, signal1 );
-          asPlot( signal1 );
-          asLinePoly( lDelta2 );
+            % set lDelta1 amplitude to 75% of signal1 and draw both in the same plot
+            lDelta2 = asSignalAmplitude( lDelta1, 0.75, signal1 );
+            asPlot( signal1 );
+            asLinePoly( lDelta2 );
 
 
 #### asSignalMatch()
@@ -294,6 +299,11 @@
                       This calls asSignalAmplitude( signal1, scale, sigRef)
                     
     RETURN: sigMat  - a modified copy of signal1
+
+  WARNING:  
+   Make sure that you don't use modified deltaLists to to extract packets via
+   asListPacketsByDeltas(). This _won't_ work because the shifted amplitude will
+   create wrong time offsets and result in empty lists!
 
     EXAMPLES:
             % move the bottom of signal1 to the vertical middle of signal2.
@@ -474,6 +484,8 @@
   - the peak to peak noise between the packets is lower than a [...] threshold level and
   - the active area is always busy and does not "time out" or show no activity for a
     period longer than timeNoPeak.
+  - the delta list was _not_ modified by any of the amplitude or offset shifting plot
+    functions!
 
   [...]
 
