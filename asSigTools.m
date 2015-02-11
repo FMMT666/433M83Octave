@@ -447,6 +447,11 @@ endfunction
 %***          - a shortened deltaListShort with all long times removed
 %*****************************************************************************
 function [ actList, deltaListShort ] = asListPacketsByDeltas( deltaList, timeNoPeak )
+
+  % TODO: While this nicely aligns all packets, the first bit of
+  %       the first packet is snipped (otherwise the following packets
+  %       would not be aligned ;-)
+  %       Need to find a better solution...
 	
   actList        = [];
   
